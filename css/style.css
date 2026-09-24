@@ -71,7 +71,7 @@ body {
 
 .stage {
   padding: 48px 40px;
-  max-width: 760px;
+  max-width: 900px;
 }
 .stage h1 {
   font-size: 36px;
@@ -257,4 +257,108 @@ body {
   width: 0;
   background: var(--green);
   transition: width 0.5s;
+}
+.profile-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.profile-head .avatar {
+  margin: 0;
+  width: 64px;
+  height: 64px;
+}
+.profile-head h1 {
+  font-size: 28px;
+  margin-bottom: 2px;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin: 28px 0 12px;
+}
+.stat,
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 18px;
+}
+.stat span {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+.stat b {
+  font-size: 26px;
+  font-weight: 600;
+}
+
+.panels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.panel h3 {
+  font:
+    500 11px "JetBrains Mono",
+    monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+
+.lang-row {
+  display: grid;
+  grid-template-columns: 96px 1fr 40px;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  margin-bottom: 14px;
+}
+.lang-bar {
+  height: 6px;
+  background: #111c17;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.lang-fill {
+  height: 100%;
+  width: 0;
+  background: var(--green);
+  border-radius: 3px;
+  transition: width 1s;
+}
+
+.proj-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+}
+.proj-row:last-child {
+  border-bottom: 0;
+}
+.proj-row small {
+  color: var(--muted);
+  font-family: "JetBrains Mono", monospace;
+}
+
+@media (max-width: 800px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+  .stat-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .panels {
+    grid-template-columns: 1fr;
+  }
 }

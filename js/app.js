@@ -161,7 +161,7 @@ async function fetchRepos(username) {
   return res.json();
 }
 
-function analyseRepos(repos) {
+function analyseRepos(repos, username) {
   const own = repos.filter((r) => !r.fork);
 
   const langCount = {};
@@ -178,7 +178,8 @@ function analyseRepos(repos) {
       percent: Math.round((count / total) * 100),
     }));
 
-  const projects = [...own]
+  const projects = own
+    .filter((r) => r.name.toLowerCase() !== username.toLowerCase())
     .sort((a, b) => b.stargazers_count - a.stargazers_count)
     .slice(0, 3)
     .map((r) => ({
@@ -209,7 +210,7 @@ async function scanScreen(p) {
     tick(0);
     await logCommand("fetch repos", repos.length + " repositories");
 
-    analysis = analyseRepos(repos);
+    analysis = analyseRepos(repos, p.login);
     await wait(500);
     tick(1);
     const names = analysis.languages.map((l) => l.name).join(", ");
@@ -221,6 +222,8 @@ async function scanScreen(p) {
       "scan complete",
       analysis.stars + " stars across " + analysis.repoCount + " repos",
     );
+    await wait(1000);
+    reportScreen();
   } catch (err) {
     document.getElementById("scanTitle").textContent =
       "Couldn't finish the scan";
@@ -255,3 +258,68 @@ document.getElementById("userInput").addEventListener("keydown", (e) => {
 document.getElementById("userInput").addEventListener("input", () => {
   document.getElementById("userError").textContent = "";
 });
+document.getElementById("againBtn").addEventListener("click", () => {
+  document.getElementById("userInput").value = "";
+  usernameScreen();
+});
+function el(tag, className, text) {
+  const e = document.createElement(tag);
+  if (className) e.className = className;
+  if (text !== undefined) e.textContent = text;
+  return e;
+}
+
+async function reportScreen() {
+  showScreen(4);
+
+  document.getElementById("repAvatar").src = profile.avatar_url;
+  document.getElementById("repName").textContent =
+    profile.name || profile.login;
+  document.getElementById("repMeta").textContent = "@" + profile.login;
+
+  const grid = document.getElementById("statGrid");
+  grid.textContent = "";
+  [
+    ["Original repos", analysis.repoCount],
+    ["Stars earned", analysis.stars],
+    ["Followers", profile.followers],
+    ["On GitHub since", new Date(profile.created_at).getFullYear()],
+  ].forEach(([label, value]) => {
+    const box = el("div", "stat");
+    box.append(el("span", "", label), el("b", "", value));
+    grid.append(box);
+  });
+
+  const langList = document.getElementById("langList");
+  langList.textContent = "";
+  if (analysis.languages.length === 0) {
+    langList.append(el("p", "", "No language data found."));
+  }
+  analysis.languages.forEach((l) => {
+    const row = el("div", "lang-row");
+    const bar = el("div", "lang-bar");
+    const fill = el("div", "lang-fill");
+    fill.dataset.width = l.percent;
+    bar.append(fill);
+    row.append(el("span", "", l.name), bar, el("span", "", l.percent + "%"));
+    langList.append(row);
+  });
+  setTimeout(() => {
+    document.querySelectorAll(".lang-fill").forEach((f) => {
+      f.style.width = f.dataset.width + "%";
+    });
+  }, 100);
+
+  const projList = document.getElementById("projList");
+  projList.textContent = "";
+  analysis.projects.forEach((p) => {
+    const row = el("div", "proj-row");
+    row.append(
+      el("span", "", p.name),
+      el("small", "", (p.language || "n/a") + " · ★ " + p.stars),
+    );
+    projList.append(row);
+  });
+
+  await logCommand("report --user " + profile.login, "ready");
+}
