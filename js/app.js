@@ -387,3 +387,47 @@ async function reportScreen() {
 
   await logCommand("report --user " + profile.login, "ready");
 }
+function cardScreen() {
+  showScreen(5);
+  document.getElementById("cardAvatar").src = profile.avatar_url;
+  document.getElementById("cardName").textContent =
+    profile.name || profile.login;
+  document.getElementById("cardUser").textContent = "@" + profile.login;
+
+  const stats = document.getElementById("cardStats");
+  stats.textContent = "";
+  [
+    ["Repos", analysis.repoCount],
+    ["Stars", analysis.stars],
+    ["Followers", profile.followers],
+    [
+      "Longest streak",
+      analysis.streak ? analysis.streak.longest + " days" : "N/A",
+    ],
+  ].forEach(([label, value]) => {
+    const box = el("div");
+    box.append(el("small", "", label), el("strong", "", value));
+    stats.append(box);
+  });
+
+  const langs = document.getElementById("cardLangs");
+  langs.textContent = "";
+  analysis.languages.forEach((l) => langs.append(el("span", "chip", l.name)));
+
+  const mini = document.getElementById("cardHeat");
+  mini.textContent = "";
+  if (analysis.days && analysis.days.length) {
+    const recent = analysis.days.slice(-112);
+    const pad = new Date(recent[0].date).getUTCDay();
+    for (let i = 0; i < pad; i++) mini.append(el("i", "pad"));
+    recent.forEach((d) =>
+      mini.append(el("i", d.level > 0 ? "l" + d.level : "")),
+    );
+  }
+  logCommand("export --card", "preview ready");
+}
+
+document.getElementById("cardBtn").addEventListener("click", cardScreen);
+document
+  .getElementById("backBtn")
+  .addEventListener("click", () => showScreen(4));
