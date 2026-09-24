@@ -191,6 +191,38 @@ function analyseRepos(repos, username) {
   const stars = own.reduce((sum, r) => sum + r.stargazers_count, 0);
   return { languages, projects, stars, repoCount: own.length };
 }
+async function fetchContributions(username) {
+  try {
+    const res = await fetch(
+      "https://github-contributions-api.jogruber.de/v4/" +
+        encodeURIComponent(username) +
+        "?y=last",
+    );
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.contributions || null;
+  } catch (err) {
+    return null;
+  }
+}
+
+function analyseStreak(days) {
+  let longest = 0;
+  let run = 0;
+  let active = 0;
+  let total = 0;
+  days.forEach((d) => {
+    total += d.count;
+    if (d.count > 0) {
+      active++;
+      run++;
+      if (run > longest) longest = run;
+    } else {
+      run = 0;
+    }
+  });
+  return { longest, active, total };
+}
 
 async function scanScreen(p) {
   profile = p;
@@ -211,6 +243,15 @@ async function scanScreen(p) {
     await logCommand("fetch repos", repos.length + " repositories");
 
     analysis = analyseRepos(repos, p.login);
+    const days = await fetchContributions(p.login);
+    analysis.days = days;
+    analysis.streak = days ? analyseStreak(days) : null;
+    await logCommand(
+      "consistency",
+      analysis.streak
+        ? "longest streak: " + analysis.streak.longest + " days"
+        : "unavailable",
+    );
     await wait(500);
     tick(1);
     const names = analysis.languages.map((l) => l.name).join(", ");
@@ -284,6 +325,10 @@ async function reportScreen() {
     ["Stars earned", analysis.stars],
     ["Followers", profile.followers],
     ["On GitHub since", new Date(profile.created_at).getFullYear()],
+    [
+      "Longest streak",
+      analysis.streak ? analysis.streak.longest + " days" : "N/A",
+    ],
   ].forEach(([label, value]) => {
     const box = el("div", "stat");
     box.append(el("span", "", label), el("b", "", value));
