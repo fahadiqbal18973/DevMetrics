@@ -140,18 +140,94 @@ async function submitUsername() {
   busy = false;
 }
 
-function scanScreen(p) {
+let profile = {};
+let analysis = {};
+
+const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+
+function tick(index) {
+  document.querySelectorAll("#checklist li")[index].classList.add("ok");
+  document.getElementById("progressBar").style.width =
+    ((index + 1) / 3) * 100 + "%";
+}
+
+async function fetchRepos(username) {
+  const url =
+    "https://api.github.com/users/" +
+    encodeURIComponent(username) +
+    "/repos?per_page=100&sort=updated";
+  const res = await fetch(url);
+  if (!res.ok) throw new Error("repos request failed");
+  return res.json();
+}
+
+function analyseRepos(repos) {
+  const own = repos.filter((r) => !r.fork);
+
+  const langCount = {};
+  own.forEach((r) => {
+    if (r.language) langCount[r.language] = (langCount[r.language] || 0) + 1;
+  });
+  const total = Object.values(langCount).reduce((a, b) => a + b, 0);
+
+  const languages = Object.entries(langCount)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)
+    .map(([name, count]) => ({
+      name,
+      percent: Math.round((count / total) * 100),
+    }));
+
+  const projects = [...own]
+    .sort((a, b) => b.stargazers_count - a.stargazers_count)
+    .slice(0, 3)
+    .map((r) => ({
+      name: r.name,
+      stars: r.stargazers_count,
+      language: r.language,
+    }));
+
+  const stars = own.reduce((sum, r) => sum + r.stargazers_count, 0);
+  return { languages, projects, stars, repoCount: own.length };
+}
+
+async function scanScreen(p) {
+  profile = p;
   showScreen(3);
+  document
+    .querySelectorAll("#checklist li")
+    .forEach((li) => li.classList.remove("ok"));
+  document.getElementById("progressBar").style.width = "0";
   document.getElementById("scanAvatar").src = p.avatar_url;
-  document.getElementById("scanTitle").textContent =
-    "Profile found: @" + p.login;
+  document.getElementById("scanTitle").textContent = "Scanning @" + p.login;
   document.getElementById("scanInfo").textContent =
-    (p.name || p.login) +
-    " · " +
-    p.followers +
-    " followers · " +
-    p.public_repos +
-    " repos";
+    (p.name || p.login) + " · " + p.followers + " followers";
+
+  try {
+    const repos = await fetchRepos(p.login);
+    await wait(500);
+    tick(0);
+    await logCommand("fetch repos", repos.length + " repositories");
+
+    analysis = analyseRepos(repos);
+    await wait(500);
+    tick(1);
+    const names = analysis.languages.map((l) => l.name).join(", ");
+    await logCommand("analyse languages", names || "no language data");
+
+    await wait(500);
+    tick(2);
+    await logCommand(
+      "scan complete",
+      analysis.stars + " stars across " + analysis.repoCount + " repos",
+    );
+  } catch (err) {
+    document.getElementById("scanTitle").textContent =
+      "Couldn't finish the scan";
+    document.getElementById("scanInfo").textContent =
+      "Check your internet and try again.";
+    await logCommand("scan --user " + p.login, "request failed");
+  }
 }
 document.getElementById("startBtn").addEventListener(
   "click",

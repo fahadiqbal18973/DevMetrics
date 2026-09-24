@@ -225,3 +225,36 @@ body {
   border: 1px solid var(--green);
   margin-bottom: 20px;
 }
+.checklist {
+  list-style: none;
+  display: grid;
+  gap: 10px;
+  margin: 24px 0;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  color: var(--muted);
+}
+.checklist li::before {
+  content: "…  ";
+}
+.checklist li.ok {
+  color: var(--text);
+}
+.checklist li.ok::before {
+  content: "✓  ";
+  color: var(--green);
+}
+
+.progress {
+  height: 6px;
+  max-width: 420px;
+  background: #111c17;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.progress-bar {
+  height: 100%;
+  width: 0;
+  background: var(--green);
+  transition: width 0.5s;
+}
