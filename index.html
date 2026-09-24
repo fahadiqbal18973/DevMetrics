@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DevMetrics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="logo" href="#">DevMetrics</a>
+    </header>
+
+    <main class="layout">
+      <aside class="steps">
+        <ol>
+          <li class="active">Intro</li>
+          <li>Name</li>
+          <li>Username</li>
+          <li>Scan</li>
+          <li>Report</li>
+          <li>Card</li>
+        </ol>
+      </aside>
+
+      <section class="stage" id="stage">
+        <div class="screen active" id="screen-intro">
+          <div class="bot-row">
+            <svg
+              class="bot"
+              viewBox="0 0 80 80"
+              width="72"
+              height="72"
+              aria-hidden="true"
+            >
+              <rect
+                x="16"
+                y="24"
+                width="48"
+                height="36"
+                rx="12"
+                fill="#0b1210"
+                stroke="#34e0a1"
+                stroke-width="2"
+              />
+              <circle class="eye" cx="32" cy="42" r="5" fill="#34e0a1" />
+              <circle class="eye" cx="48" cy="42" r="5" fill="#34e0a1" />
+              <path d="M40 24V15" stroke="#34e0a1" stroke-width="2" />
+              <circle cx="40" cy="12" r="3" fill="#34e0a1" />
+            </svg>
+            <div class="bubble" id="bubble"></div>
+          </div>
+          <h1>Understand any GitHub profile.</h1>
+          <p>Languages, projects and consistency, analysed in seconds.</p>
+          <button class="btn" id="startBtn">Start analysis</button>
+        </div>
+
+        <div class="screen" id="screen-name">
+          <div class="bot-row">
+            <svg viewBox="0 0 80 80" width="56" height="56" aria-hidden="true">
+              <rect
+                x="16"
+                y="24"
+                width="48"
+                height="36"
+                rx="12"
+                fill="#0b1210"
+                stroke="#34e0a1"
+                stroke-width="2"
+              />
+              <circle class="eye" cx="32" cy="42" r="5" fill="#34e0a1" />
+              <circle class="eye" cx="48" cy="42" r="5" fill="#34e0a1" />
+              <path d="M40 24V15" stroke="#34e0a1" stroke-width="2" />
+              <circle cx="40" cy="12" r="3" fill="#34e0a1" />
+            </svg>
+            <div class="bubble" id="nameBubble"></div>
+          </div>
+          <div class="field">
+            <span class="prompt">&gt;</span>
+            <input
+              id="nameInput"
+              type="text"
+              placeholder="Your name"
+              autocomplete="off"
+            />
+          </div>
+          <p class="error" id="nameError"></p>
+          <button class="btn show" id="nameBtn">Continue</button>
+        </div>
+        <div class="screen" id="screen-username">
+          <div class="bot-row">
+            <svg viewBox="0 0 80 80" width="56" height="56" aria-hidden="true">
+              <rect
+                x="16"
+                y="24"
+                width="48"
+                height="36"
+                rx="12"
+                fill="#0b1210"
+                stroke="#34e0a1"
+                stroke-width="2"
+              />
+              <circle class="eye" cx="32" cy="42" r="5" fill="#34e0a1" />
+              <circle class="eye" cx="48" cy="42" r="5" fill="#34e0a1" />
+              <path d="M40 24V15" stroke="#34e0a1" stroke-width="2" />
+              <circle cx="40" cy="12" r="3" fill="#34e0a1" />
+            </svg>
+            <div class="bubble" id="userBubble"></div>
+          </div>
+          <div class="field">
+            <span class="prompt">@</span>
+            <input
+              id="userInput"
+              type="text"
+              placeholder="github-username"
+              autocomplete="off"
+            />
+          </div>
+          <p class="error" id="userError"></p>
+          <button class="btn show" id="userBtn">Analyse profile</button>
+        </div>
+
+        <div class="screen" id="screen-scan">
+          <img class="avatar" id="scanAvatar" alt="GitHub avatar" />
+          <h1 id="scanTitle"></h1>
+          <p id="scanInfo"></p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="terminal" id="terminal"></footer>
+
+    <script src="js/app.js"></script>
+  </body>
+</html>
