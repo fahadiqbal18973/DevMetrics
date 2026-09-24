@@ -389,7 +389,9 @@ async function reportScreen() {
 }
 function cardScreen() {
   showScreen(5);
-  document.getElementById("cardAvatar").src = profile.avatar_url;
+  const cardImg = document.getElementById("cardAvatar");
+  cardImg.crossOrigin = "anonymous";
+  cardImg.src = profile.avatar_url;
   document.getElementById("cardName").textContent =
     profile.name || profile.login;
   document.getElementById("cardUser").textContent = "@" + profile.login;
@@ -431,3 +433,22 @@ document.getElementById("cardBtn").addEventListener("click", cardScreen);
 document
   .getElementById("backBtn")
   .addEventListener("click", () => showScreen(4));
+async function downloadCard() {
+  const card = document.getElementById("profileCard");
+  try {
+    const canvas = await html2canvas(card, {
+      backgroundColor: "#060908",
+      scale: 2,
+      useCORS: true,
+    });
+    const link = document.createElement("a");
+    link.download = "devmetrics-" + profile.login + ".png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+    logCommand("export --card card.png", "saved");
+  } catch (err) {
+    logCommand("export --card", "failed");
+  }
+}
+
+document.getElementById("downloadBtn").addEventListener("click", downloadCard);

@@ -471,3 +471,6 @@ body {
     12px "JetBrains Mono",
     monospace;
 }
+.btn + .btn {
+  margin-left: 10px;
+}
