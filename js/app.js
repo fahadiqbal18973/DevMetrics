@@ -365,6 +365,25 @@ async function reportScreen() {
     );
     projList.append(row);
   });
+  const heat = document.getElementById("heat");
+  const note = document.getElementById("heatNote");
+  heat.textContent = "";
+  if (analysis.days && analysis.days.length) {
+    const pad = new Date(analysis.days[0].date).getUTCDay();
+    for (let i = 0; i < pad; i++) heat.append(el("i", "pad"));
+    analysis.days.forEach((d) => {
+      const cell = el("i", d.level > 0 ? "l" + d.level : "");
+      cell.title = d.date + ": " + d.count + " contributions";
+      heat.append(cell);
+    });
+    note.textContent =
+      analysis.streak.active +
+      " active days · " +
+      analysis.streak.total +
+      " contributions in the last year";
+  } else {
+    note.textContent = "Contribution data is unavailable right now.";
+  }
 
   await logCommand("report --user " + profile.login, "ready");
 }

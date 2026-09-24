@@ -362,3 +362,40 @@ body {
     grid-template-columns: 1fr;
   }
 }
+#heatPanel {
+  margin-bottom: 28px;
+  overflow-x: auto;
+}
+
+.heat {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(7, 12px);
+  grid-auto-columns: 12px;
+  gap: 3px;
+}
+.heat i {
+  border-radius: 2px;
+  background: #0f1a15;
+}
+.heat .pad {
+  background: transparent;
+}
+.heat .l1 {
+  background: rgba(52, 224, 161, 0.3);
+}
+.heat .l2 {
+  background: rgba(52, 224, 161, 0.55);
+}
+.heat .l3 {
+  background: rgba(52, 224, 161, 0.8);
+}
+.heat .l4 {
+  background: #34e0a1;
+}
+
+.heat-note {
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 13px;
+}
