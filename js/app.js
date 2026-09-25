@@ -175,6 +175,8 @@ function analyseRepos(repos, username) {
     .slice(0, 3)
     .map(([name, count]) => ({
       name,
+      count,
+      repoTotal: total,
       percent: Math.round((count / total) * 100),
     }));
 
@@ -353,8 +355,10 @@ async function reportScreen() {
     fill.dataset.width = l.percent;
     bar.append(fill);
     row.append(el("span", "", l.name), bar, el("span", "", l.percent + "%"));
+    row.title = l.count + " of " + l.repoTotal + " repos use " + l.name;
     langList.append(row);
   });
+
   setTimeout(() => {
     document.querySelectorAll(".lang-fill").forEach((f) => {
       f.style.width = f.dataset.width + "%";
