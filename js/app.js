@@ -119,7 +119,7 @@ async function submitUsername() {
 
   if (result.status === "notFound") {
     error.textContent =
-      "Oops, couldn't find @" + value + ". Check the spelling and try again.";
+      "Error: User not found. Check the handle and try again.";
     await logCommand("fetch --user " + value, "404 user not found");
   } else if (result.status === "rateLimited") {
     error.textContent =
