@@ -397,57 +397,69 @@ async function reportScreen() {
 
   await logCommand("report --user " + profile.login, "ready");
 }
+function roleTag() {
+  if (profile.bio && profile.bio.trim()) {
+    const bio = profile.bio.trim();
+    return bio.length > 42 ? bio.slice(0, 42) + "…" : bio;
+  }
+  const top = analysis.languages[0];
+  return top ? top.name + " developer" : "Software developer";
+}
+
 function cardScreen() {
   showScreen(5);
-  const cardImg = document.getElementById("cardAvatar");
-  cardImg.crossOrigin = "anonymous";
-  cardImg.src = profile.avatar_url;
+
+  const img = document.getElementById("cardAvatar");
+  img.crossOrigin = "anonymous";
+  img.src = profile.avatar_url;
+
   document.getElementById("cardName").textContent =
     profile.name || profile.login;
   document.getElementById("cardUser").textContent = "@" + profile.login;
-
-  const stats = document.getElementById("cardStats");
-  stats.textContent = "";
-  [
-    ["Repos", analysis.repoCount],
-    ["Stars", analysis.stars],
-    ["Followers", profile.followers],
-    [
-      "Longest streak",
-      analysis.streak ? analysis.streak.longest + " days" : "N/A",
-    ],
-  ].forEach(([label, value]) => {
-    const box = el("div");
-    box.append(el("small", "", label), el("strong", "", value));
-    stats.append(box);
-  });
+  document.getElementById("cardRole").textContent = roleTag();
 
   const langs = document.getElementById("cardLangs");
   langs.textContent = "";
-  analysis.languages.forEach((l) => langs.append(el("span", "chip", l.name)));
-
-  const mini = document.getElementById("cardHeat");
-  mini.textContent = "";
-  if (analysis.days && analysis.days.length) {
-    const recent = analysis.days.slice(-112);
-    const pad = new Date(recent[0].date).getUTCDay();
-    for (let i = 0; i < pad; i++) mini.append(el("i", "pad"));
-    recent.forEach((d) =>
-      mini.append(el("i", d.level > 0 ? "l" + d.level : "")),
-    );
+  if (analysis.languages.length === 0) {
+    langs.append(el("span", "", "No language data"));
+  } else {
+    analysis.languages.forEach((l, i) => {
+      langs.append(el("span", i === 0 ? "main" : "", l.name));
+    });
   }
+
+  const grid = document.getElementById("cardFingerprint");
+  grid.textContent = "";
+  if (analysis.days && analysis.days.length) {
+    analysis.days.slice(-100).forEach((d) => {
+      grid.append(el("i", d.level > 0 ? "l" + d.level : ""));
+    });
+  }
+
+  const sig = document.getElementById("cardSig");
+  sig.textContent = "";
+  if (analysis.streak) {
+    sig.append(
+      el("b", "", analysis.streak.total),
+      document.createTextNode(" contributions · "),
+      el("b", "", analysis.streak.active),
+      document.createTextNode(" active days · "),
+      el("b", "", analysis.streak.longest),
+      document.createTextNode(" day streak"),
+    );
+  } else {
+    sig.textContent = "Contribution data unavailable";
+  }
+
+  document.getElementById("cardLink").textContent =
+    "github.com/" + profile.login;
   logCommand("export --card", "preview ready");
 }
-
-document.getElementById("cardBtn").addEventListener("click", cardScreen);
-document
-  .getElementById("backBtn")
-  .addEventListener("click", () => showScreen(4));
 async function downloadCard() {
   const card = document.getElementById("profileCard");
   try {
     const canvas = await html2canvas(card, {
-      backgroundColor: "#060908",
+      backgroundColor: "#080d0b",
       scale: 2,
       useCORS: true,
     });
@@ -460,5 +472,6 @@ async function downloadCard() {
     logCommand("export --card", "failed");
   }
 }
+document.getElementById("cardBtn").addEventListener("click", cardScreen);
 
 document.getElementById("downloadBtn").addEventListener("click", downloadCard);

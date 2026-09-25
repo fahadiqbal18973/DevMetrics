@@ -172,18 +172,31 @@
           </button>
         </div>
         <div class="screen" id="screen-card">
-          <div class="card" id="profileCard">
-            <div class="card-head">
-              <img class="avatar" id="cardAvatar" alt="GitHub avatar" />
+          <div class="idcard" id="profileCard">
+            <div class="idc-top">
+              <div class="idc-avatar">
+                <img id="cardAvatar" alt="GitHub avatar" />
+              </div>
               <div>
-                <b id="cardName"></b>
-                <span id="cardUser"></span>
+                <div class="idc-name" id="cardName"></div>
+                <div class="idc-hand" id="cardUser"></div>
+                <div class="idc-role" id="cardRole"></div>
               </div>
             </div>
-            <div class="card-stats" id="cardStats"></div>
-            <div id="cardLangs"></div>
-            <div class="heat mini" id="cardHeat"></div>
-            <div class="card-mark">&gt;_ DevMetrics</div>
+
+            <div class="idc-langs" id="cardLangs"></div>
+
+            <div class="idc-finger">
+              <div class="idc-lbl">Contribution pattern</div>
+              <div class="idc-grid" id="cardFingerprint"></div>
+            </div>
+
+            <div class="idc-sig" id="cardSig"></div>
+
+            <div class="idc-foot">
+              <span id="cardLink"></span>
+              <span class="idc-mark">&gt;_ devmetrics</span>
+            </div>
           </div>
           <button class="btn show" id="downloadBtn">Download card (PNG)</button>
           <button class="btn show" id="backBtn">Back to report</button>
