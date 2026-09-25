@@ -240,7 +240,10 @@ async function scanScreen(p) {
     const repos = await fetchRepos(p.login);
     await wait(500);
     tick(0);
-    await logCommand("fetch repos", repos.length + " repositories");
+    await logCommand(
+      "[+] Fetching user profile data from GitHub API",
+      repos.length + " repositories found",
+    );
 
     analysis = analyseRepos(repos, p.login);
     const days = await fetchContributions(p.login);
@@ -255,12 +258,15 @@ async function scanScreen(p) {
     await wait(500);
     tick(1);
     const names = analysis.languages.map((l) => l.name).join(", ");
-    await logCommand("analyse languages", names || "no language data");
+    await logCommand(
+      "[+] Parsing repository statistics",
+      "languages: " + (names || "none found"),
+    );
 
     await wait(500);
     tick(2);
     await logCommand(
-      "scan complete",
+      "[+] Calculating total repositories and language weight",
       analysis.stars + " stars across " + analysis.repoCount + " repos",
     );
     await wait(1000);
