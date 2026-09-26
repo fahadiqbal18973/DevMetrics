@@ -204,7 +204,19 @@
       </section>
     </main>
 
-    <footer class="terminal" id="terminal"></footer>
+    <footer class="terminal-wrap">
+      <div class="terminal" id="terminal"></div>
+      <div class="term-input-row">
+        <span class="prompt">$</span>
+        <input
+          type="text"
+          id="termInput"
+          placeholder="type 'help'"
+          autocomplete="off"
+          spellcheck="false"
+        />
+      </div>
+    </footer>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <footer class="social">
       <span>Built by Fahad Iqbal</span>

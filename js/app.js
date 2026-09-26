@@ -488,3 +488,43 @@ document.getElementById("downloadBtn").addEventListener("click", downloadCard);
 document
   .getElementById("backBtn")
   .addEventListener("click", () => showScreen(4));
+function termOutput(text) {
+  const out = document.createElement("div");
+  out.className = "output";
+  out.textContent = text;
+  terminal.appendChild(out);
+  terminal.scrollTop = terminal.scrollHeight;
+}
+
+function runCommand(raw) {
+  const cmd = raw.trim().toLowerCase();
+  logCommand(raw, "");
+
+  if (cmd === "help") {
+    termOutput("Available commands: help, clear, whoami, fetch-repos");
+  } else if (cmd === "clear") {
+    terminal.textContent = "";
+  } else if (cmd === "whoami") {
+    termOutput(profile.login ? "@" + profile.login : "no profile analysed yet");
+  } else if (cmd === "fetch-repos") {
+    if (!analysis.projects || analysis.projects.length === 0) {
+      termOutput("no repository data yet — analyse a profile first");
+    } else {
+      analysis.projects.forEach((p) => {
+        termOutput(p.name + " · " + (p.language || "n/a") + " · ★ " + p.stars);
+      });
+    }
+  } else if (cmd === "") {
+    // ignore empty input
+  } else {
+    termOutput("command not found: " + cmd + " (try 'help')");
+  }
+}
+
+document.getElementById("termInput").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    const input = e.target;
+    runCommand(input.value);
+    input.value = "";
+  }
+});
