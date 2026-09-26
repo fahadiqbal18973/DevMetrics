@@ -916,3 +916,26 @@ input {
 #screen-card {
   text-align: center;
 }
+
+.social {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 12px;
+}
+.social-links {
+  display: flex;
+  gap: 12px;
+}
+.social-links a {
+  color: var(--muted);
+  display: flex;
+  transition: color 0.2s;
+}
+.social-links a:hover {
+  color: var(--green);
+}
