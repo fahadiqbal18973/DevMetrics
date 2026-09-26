@@ -309,8 +309,12 @@ document.getElementById("userInput").addEventListener("input", () => {
 });
 document.getElementById("againBtn").addEventListener("click", () => {
   document.getElementById("userInput").value = "";
+  document.getElementById("userError").textContent = "";
+  profile = {};
+  analysis = {};
   usernameScreen();
 });
+
 function el(tag, className, text) {
   const e = document.createElement(tag);
   if (className) e.className = className;
@@ -336,6 +340,12 @@ async function reportScreen() {
     [
       "Longest streak",
       analysis.streak ? analysis.streak.longest + " days" : "N/A",
+    ],
+    [
+      "Consistency",
+      analysis.streak
+        ? Math.round((analysis.streak.active / 365) * 100) + "%"
+        : "N/A",
     ],
   ].forEach(([label, value]) => {
     const box = el("div", "stat");
@@ -475,3 +485,6 @@ async function downloadCard() {
 document.getElementById("cardBtn").addEventListener("click", cardScreen);
 
 document.getElementById("downloadBtn").addEventListener("click", downloadCard);
+document
+  .getElementById("backBtn")
+  .addEventListener("click", () => showScreen(4));
