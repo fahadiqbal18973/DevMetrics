@@ -528,3 +528,134 @@ document.getElementById("termInput").addEventListener("keydown", (e) => {
     input.value = "";
   }
 });
+async function fetchFullProfile(username) {
+  const res = await fetch(
+    "https://api.github.com/users/" + encodeURIComponent(username),
+  );
+  if (!res.ok) return null;
+  const p = await res.json();
+  const repos = await fetchRepos(username);
+  const a = analyseRepos(repos, username);
+  const days = await fetchContributions(username);
+  const streak = days
+    ? analyseStreak(days)
+    : { longest: 0, active: 0, total: 0 };
+  return {
+    login: p.login,
+    avatar_url: p.avatar_url,
+    repoCount: a.repoCount,
+    stars: a.stars,
+    followers: p.followers,
+    longestStreak: streak.longest,
+    consistency: Math.round((streak.active / 365) * 100),
+  };
+}
+
+function battleRow(label, valA, valB, higherWins) {
+  const aWins = higherWins ? valA > valB : valA < valB;
+  const bWins = higherWins ? valB > valA : valB < valA;
+  return {
+    label,
+    a: { value: valA, win: aWins },
+    b: { value: valB, win: bWins },
+  };
+}
+
+function renderBattle(a, b) {
+  const rows = [
+    battleRow("Repos", a.repoCount, b.repoCount, true),
+    battleRow("Stars", a.stars, b.stars, true),
+    battleRow("Followers", a.followers, b.followers, true),
+    battleRow("Streak", a.longestStreak, b.longestStreak, true),
+    battleRow("Consistency", a.consistency, b.consistency, true),
+  ];
+
+  let scoreA = 0,
+    scoreB = 0;
+  rows.forEach((r) => {
+    if (r.a.win) scoreA++;
+    if (r.b.win) scoreB++;
+  });
+
+  const result = document.getElementById("battleResult");
+  result.textContent = "";
+
+  const cols = el("div", "battle-cols");
+  [
+    { profile: a, score: scoreA, otherScore: scoreB, side: "a" },
+    { profile: b, score: scoreB, otherScore: scoreA, side: "b" },
+  ].forEach(({ profile, score, otherScore, side }) => {
+    const card = el("div", "battle-card" + (score > otherScore ? " win" : ""));
+    const head = el("div", "battle-card-head");
+    const img = document.createElement("img");
+    img.className = "avatar";
+    img.src = profile.avatar_url;
+    head.append(img, el("span", "name", "@" + profile.login));
+    if (score > otherScore) head.append(el("span", "battle-tag", "winner"));
+    card.append(head);
+
+    rows.forEach((r) => {
+      const cell = r[side];
+      const row = el("div", "battle-row");
+      row.append(
+        el("span", "", r.label),
+        el("span", cell.win ? "w" : "", cell.value),
+      );
+      card.append(row);
+    });
+    cols.append(card);
+  });
+  result.append(cols);
+
+  const tally = el("div", "battle-tally");
+  tally.innerHTML =
+    "<b>" +
+    a.login +
+    "</b> " +
+    scoreA +
+    " &middot; <b>" +
+    b.login +
+    "</b> " +
+    scoreB +
+    " &middot; categories won";
+  result.append(tally);
+}
+
+async function runBattle() {
+  const inputA = document.getElementById("battleUserA");
+  const inputB = document.getElementById("battleUserB");
+  const error = document.getElementById("battleError");
+  const nameA = inputA.value.trim().replace(/^@/, "");
+  const nameB = inputB.value.trim().replace(/^@/, "");
+
+  if (!nameA || !nameB) {
+    error.textContent = "Enter both usernames.";
+    return;
+  }
+
+  error.textContent = "Comparing...";
+  document.getElementById("battleResult").textContent = "";
+
+  try {
+    const [a, b] = await Promise.all([
+      fetchFullProfile(nameA),
+      fetchFullProfile(nameB),
+    ]);
+    if (!a || !b) {
+      error.textContent = "Error: one or both usernames not found.";
+      return;
+    }
+    error.textContent = "";
+    renderBattle(a, b);
+  } catch (err) {
+    error.textContent = "Something went wrong. Try again.";
+  }
+}
+
+document.getElementById("battleBtn").addEventListener("click", () => {
+  showScreen(6);
+});
+document.getElementById("battleGoBtn").addEventListener("click", runBattle);
+document
+  .getElementById("battleBackBtn")
+  .addEventListener("click", () => showScreen(4));

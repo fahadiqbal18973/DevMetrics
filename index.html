@@ -166,6 +166,7 @@
             <p class="heat-note" id="heatNote"></p>
           </div>
           <button class="btn show" id="cardBtn">Create profile card</button>
+          <button class="btn gh show" id="battleBtn">Dev Battle</button>
 
           <button class="btn show" id="againBtn">
             Analyse another profile
@@ -200,6 +201,38 @@
           </div>
           <button class="btn show" id="downloadBtn">Download card (PNG)</button>
           <button class="btn show" id="backBtn">Back to report</button>
+        </div>
+        <div class="screen" id="screen-battle">
+          <h1>Dev battle</h1>
+          <p class="sub">Compare two GitHub profiles across 5 categories.</p>
+
+          <div class="battle-inputs">
+            <div class="field">
+              <span class="prompt">@</span>
+              <input
+                type="text"
+                id="battleUserA"
+                placeholder="first username"
+                autocomplete="off"
+              />
+            </div>
+            <span class="battle-vs">VS</span>
+            <div class="field">
+              <span class="prompt">@</span>
+              <input
+                type="text"
+                id="battleUserB"
+                placeholder="second username"
+                autocomplete="off"
+              />
+            </div>
+          </div>
+          <p class="error" id="battleError"></p>
+          <button class="btn show" id="battleGoBtn">Compare</button>
+
+          <div id="battleResult"></div>
+
+          <button class="btn show" id="battleBackBtn">Back to report</button>
         </div>
       </section>
     </main>
