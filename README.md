@@ -26,7 +26,7 @@ An Interactive GitHub Profile Analyser. Enter a GitHub username and get a full b
 ## Running locally
 
 1. Clone the repository:
-2. 
+   
    git clone
    https://github.com/fahadiqbal18973/DevMetrics.git
 
