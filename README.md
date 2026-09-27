@@ -1,6 +1,6 @@
 # DevMetrics
 
-An Interactive GitHub Profile Analyser. Enter a GitHub username and get a full breakdown of that developer'snpublic activity like repositories , languages used , contributions consistency , and a downloadable profile card.
+An Interactive GitHub Profile Analyser. Enter a GitHub username and get a full breakdown of that developer's public activity like repositories , languages used , contributions consistency , and a downloadable profile card.
 
 **Live Site :** https://fahadiqbal18973.github.io/DevMetrics/
 
@@ -25,12 +25,13 @@ An Interactive GitHub Profile Analyser. Enter a GitHub username and get a full b
 
 ## Running locally
 
-1. Clone the repository
+1. Clone the repository:
+2. 
    git clone
    https://github.com/fahadiqbal18973/DevMetrics.git
 
-2. Open the folder in VS Code
-3. Run `index.html` with the Live Server extension (or any static file server)
+3. Open the folder in VS Code
+4. Run `index.html` with the Live Server extension (or any static file server)
 
 No build step, no dependencies to install.
 
