@@ -978,6 +978,20 @@ input {
     padding: 16px;
     border-right: none;
     border-bottom: 1px solid var(--line);
+    position: relative;
+    .rail::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 28px;
+      background: linear-gradient(to right, transparent, var(--bg));
+      pointer-events: none;
+    }
+    .rail {
+      position: relative;
+    }
   }
   .steps ol {
     display: flex;
