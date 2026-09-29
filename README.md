@@ -1,3 +1,19 @@
+## Preview
+
+### Introduction
+![DevMetrics Introduction](intro.png)
+
+### Profile Report
+![DevMetrics Report](report.png)
+
+### Profile Card
+![DevMetrics Profile Card](card.png)
+
+### DevBattle
+![DevMetrics DevBattle](Devbattle.png)
+
+
+
 # DevMetrics
 
 An Interactive GitHub Profile Analyser. Enter a GitHub username and get a full breakdown of that developer's public activity like repositories , languages used , contributions consistency , and a downloadable profile card.
